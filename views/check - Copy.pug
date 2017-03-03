@@ -5,22 +5,23 @@ html
     link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/flatly/bootstrap.min.css", rel="stylesheet")
     script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
   body
-  
-  div
-  form(method = 'GET' action = '/')
-    label Search
-    input(type = 'text', name = 'text')
-    input(type = 'submit')
 
   div
     table.table(class='table-bordered')
       thead
-        tr: th Search results
+        tr: th Books Details
       tbody
         each rows in message
           tr
             td 
               a(href= '/check?isbn='+ rows.isbn) #{rows.isbn} 
-            td #{rows.title} 
-            td #{rows.name}
-        
+              td #{rows.title} 
+                td #{rows.name}
+  
+  div
+    label Options 
+    | &nbsp; &nbsp;
+    button(onclick='something()') CheckOut
+    | &nbsp; &nbsp;
+    button(onclick='something()') CheckIn
+

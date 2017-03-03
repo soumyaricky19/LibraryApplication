@@ -15,13 +15,11 @@ html
           tr
             td 
               a(href= '/check?isbn='+ rows.isbn) #{rows.isbn} 
-              td #{rows.title} 
-                td #{rows.name}
+            td #{rows.title} 
+            td #{rows.name}
   
   div
     label Options 
-    | &nbsp; &nbsp;
     button(onclick='something()') CheckOut
-    | &nbsp; &nbsp;
     button(onclick='something()') CheckIn
 

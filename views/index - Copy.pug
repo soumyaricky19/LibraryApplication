@@ -7,20 +7,22 @@ html
   body
   
   div
+  //h1= message
   form(method = 'GET' action = '/')
-    label Search
-    input(type = 'text', name = 'text')
+    label SearchKeyword
+    input(type = 'text', name = 'book')
+    | &nbsp; &nbsp;
     input(type = 'submit')
 
   div
     table.table(class='table-bordered')
       thead
-        tr: th Search results
+        tr: th Books Details
       tbody
         each rows in message
           tr
             td 
               a(href= '/check?isbn='+ rows.isbn) #{rows.isbn} 
-            td #{rows.title} 
-            td #{rows.name}
+              td #{rows.title} 
+                td #{rows.name}
         
