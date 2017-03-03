@@ -37,8 +37,7 @@ router.use(function (req,res,next) {
 });
 
 router.get("/",function(req,res){
-  text=req.query.myname
-  
+  text=req.query.mytext
   // console.log(typeof text)
   if(typeof text != "undefined")
   {
@@ -47,7 +46,7 @@ router.get("/",function(req,res){
     tokens = tokenizer.tokenize(text);
     if (tokens.length > 0 )
     {
-      console.log(tokens)
+      // console.log(tokens)
       query1+="and ("
       var i=0
       while (i<tokens.length)
@@ -60,22 +59,29 @@ router.get("/",function(req,res){
         }
         else
           i++
+      // console.log(tokens)  
       } 
-      console.log(tokens)  
+      
 
-      for(var i=tokens.length; i>tokens.length/2 ; i--)
-      {
-        var str=''
-        for (var j=0 ; j<i ; j++)
-          str+="%"+tokens[j]+"%"
-
-        query1+="(b.title like '"+str+"' or a.name like '"+str+"') or "  
+      for(var l=tokens.length; l>tokens.length/2 ; l--)
+      { 
+        // console.log(l)
+        for (var i=0 ; i<tokens.length-l+1 ; i++)
+        {
+          var j=i+l
+          var str=''
+          for (var k=i;k<j;k++)
+            str+="%"+tokens[k]+"%"
+          
+          console.log(str)
+          query1+="(b.title like '"+str+"' or a.name like '"+str+"') or "  
+        }
       }
     }  
 
     query1+="0=1) group by b.isbn, b.title;"  
 
-    console.log(query1)
+    // console.log(query1)
   //b.title like ? or a.name like ? or b.isbn=?
     // con.query(query1,['%'+text+'%','%'+text+'%',text],function(err,rows){
     con.query(query1,function(err,rows){    
@@ -97,9 +103,10 @@ router.get("/check",function(req,res){
   con.query(query2,[text],function(err,rows){
       if(err)
         throw err;
-      else{
-
-  res.render('check', { title: 'Library application', message: rows})
+      else
+      {
+        // console.log(rows)
+        res.render('check', { title: 'Library application', message: rows})
       }
   })
 });  

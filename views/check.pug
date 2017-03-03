@@ -13,13 +13,19 @@ html
       tbody
         each rows in message
           tr
-            td 
-              a(href= '/check?isbn='+ rows.isbn) #{rows.isbn} 
+            td #{rows.isbn} 
             td #{rows.title} 
             td #{rows.name}
   
   div
+  form(method = 'GET' action='/')
+    label Keyword   
+    input(type = 'text', name = 'mytext')
+    input(type = 'submit' value='Search')
+  div
     label Options 
     button(onclick='something()') CheckOut
     button(onclick='something()') CheckIn
+
+  
 
