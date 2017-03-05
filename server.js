@@ -234,7 +234,7 @@ router.get("/checkout",function(req,res){
                               throw err;
                             else
                             {
-                              res.render('index', { title: 'Library application', txn_msg:txn_message})
+                              res.render('checkout', { title: 'Library application', txn_msg:txn_message})
                             }
                           })
                         }  
@@ -261,8 +261,6 @@ router.get("/checkout",function(req,res){
           }
         })
       }
-
-      
     }) 
   }
 });
@@ -343,7 +341,7 @@ router.get("/checkin",function(req,res){
                 {
                   console.log(query3,[myisbn]) 
                   txn_message="SUCCESSFUL checkin!"
-                  res.render('index', { title: 'Library application', txn_msg:txn_message})
+                  res.render('checkin', { title: 'Library application', txn_msg:txn_message})
                 }
               })
             }

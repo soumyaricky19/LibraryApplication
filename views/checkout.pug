@@ -15,22 +15,24 @@ html
           li <a href='/fine'>Fine</a>
 
   div
-  h4="Book details:-"
-    h3=message[0].isbn
-    h4=message[0].title
-    h4=message[0].name
-    
-  -if(message[0].available <= 0)
-      h5="Note: The book is not available for checkout"    
+  -if(message != undefined){
+      h4="Book details:-"
+        h3=message[0].isbn
+        h4=message[0].title
+        h4=message[0].name
+        
+      -if(message[0].available <= 0)
+          h5="Note: The book is not available for checkout"    
 
-  div
-  form(method = 'GET' action='/checkout')
-    label Card ID
-    input(type = 'hidden', name = 'myisbn' value=message[0].isbn)
-    input(type = 'hidden', name = 'submit_flag' value=1)
-    input(type = 'text', name = 'mycard')
-    input(type = 'submit' value='Submit' )
-    
+      div
+      form(method = 'GET' action='/checkout')
+        label Card ID
+        input(type = 'hidden', name = 'myisbn' value=message[0].isbn)
+        input(type = 'hidden', name = 'submit_flag' value=1)
+        input(type = 'text', name = 'mycard')
+        input(type = 'submit' value='Submit' )
+  -}
+        
 
   div
   -if(txn_msg != undefined)
