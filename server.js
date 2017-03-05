@@ -413,15 +413,24 @@ router.get("/user",function(req,res){
 });  
 
 router.get("/fine",function(req,res){
-  if(req.query.refresh_flag == undefined && req.query.submit_flag == undefined)
+  if(req.query.refresh_flag == undefined && req.query.submit_flag == undefined && req.query.paid_flag == undefined)
   {
-    var query1="select t1.card_id,cast(sum as char) sum,cast(ifnull(to_pay,0.00) as char) to_pay from (select b.card_id as card_id,sum(f.fine_amt) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=0 group by b.card_id) as t1 left join (select b.card_id as card_id,sum(f.fine_amt) as to_pay from book_loans b,fines f where b.loan_id=f.loan_id and  f.paid=0 and b.date_in is not null group by b.card_id) as t2 on t1.card_id=t2.card_id"
+
+    var query1="select t1.card_id,cast(sum as char) sum,cast(ifnull(to_pay,0.00) as char) to_pay from (select b.card_id as card_id,sum(f.fine_amt) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=0 group by b.card_id) as t1 left join (select b.card_id as card_id,sum(f.fine_amt) as to_pay from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=0 and b.date_in is not null group by b.card_id) as t2 on t1.card_id=t2.card_id"
     con.query(query1,function(err,rows){
-      // console.log(rows[0])
+      // console.log(rows)
       res.render('fine', { title: 'Library application', message: rows})
     })
   }
-  else if (req.query.refresh_flag == '1' && req.query.submit_flag == undefined)
+  else if(req.query.refresh_flag == undefined && req.query.submit_flag == undefined && req.query.paid_flag == '1')
+  {
+    var query1="select b.card_id ,cast(sum(f.fine_amt) as char) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=1"
+    con.query(query1,function(err,rows){
+      console.log(rows)
+      res.render('fine', { title: 'Library application', message: rows, history_flag: '1'})
+    })
+  }
+  else if (req.query.refresh_flag == '1' && req.query.submit_flag == undefined )
   {
     var query1="update fines f,book_loans b set f.fine_amt = datediff(ifnull(b.date_in, date(now())) , b.due_date) * 0.25 where f.loan_id = b.loan_id and f.paid = 0"
     con.query(query1,function(err,rows){
@@ -451,15 +460,16 @@ router.get("/fine",function(req,res){
       }
     })
   }
-  else if (req.query.submit_flag == '1' && req.query.radio_flag == '1')
+  else if (req.query.submit_flag == '1' && req.query.mycardid != undefined)
   {
+    console.log(req.query.mycardid)
     var mycardid=req.query.mycardid
-    var query="update fines f,book_loans b set f.paid=1,fine_amt=0 where f.loan_id = b.loan_id and b.card_id=? and b.date_in is not null"
+    var query="update fines f,book_loans b set f.paid=1 where f.loan_id = b.loan_id and b.card_id=? and b.date_in is not null"
     con.query(query,[mycardid],function(err,rows)
     {
       if (err)
       {
-        txn_message="refresh error"
+        txn_message="Refresh error"
         console.log(txn_message)
         res.render('fine', { title: 'Library application', txn_msg: txn_message})
       }
@@ -489,7 +499,7 @@ router.get("/fine",function(req,res){
                 var query3="select t1.card_id,cast(sum as char) sum,cast(ifnull(to_pay,0.00) as char) to_pay from (select b.card_id as card_id,sum(f.fine_amt) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=0 group by b.card_id) as t1 left join (select b.card_id as card_id,sum(f.fine_amt) as to_pay from book_loans b,fines f where b.loan_id=f.loan_id and  f.paid=0 and b.date_in is not null group by b.card_id) as t2 on t1.card_id=t2.card_id"
                 con.query(query3,function(err,rows)
                 {
-                  txn_message+="and refreshed!"
+                  txn_message+=" and data refreshed!"
                   res.render('fine', { title: 'Library application', message: rows, txn_msg: txn_message})
                 })
               }
@@ -502,6 +512,7 @@ router.get("/fine",function(req,res){
   else
   {
     txn_message="Nothing was selected"
+    console.log(txn_message)
     res.render('fine', { title: 'Library application', txn_msg: txn_message})
   }
 });  

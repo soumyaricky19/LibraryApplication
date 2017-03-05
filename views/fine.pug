@@ -22,32 +22,41 @@ html
       input(type = 'hidden' name = 'refresh_flag' value=1)
 
   div
-    -if(message !== undefined){
-      -if(message == '')
+    form(method = 'GET' action='/fine')
+      input(type = 'submit' value='View history')
+      input(type = 'hidden' name = 'paid_flag' value=1)    
+
+  div
+      -if(message == '' || message == undefined || message[0].card_id == null)
         h1="No fine data"
       -else{
         form(method = 'GET' action='/fine')
-          input(type = 'hidden', name = 'submit_flag' value=1)
-          input(type = 'submit' value='Pay' )
+          -if (history_flag != '1'){
+            input(type = 'hidden' name = 'submit_flag' value=1)    
+            input(type = 'submit' value='Pay' )
+          -}
+
           table.table(class='table-bordered')
             thead
               tr
                 th CARD_ID
-                th TOTAL FINE
-                th PAYABLE FINE
-                th PAY
+                -if(history_flag != '1'){
+                  th TOTAL FINE
+                  th PAYABLE FINE
+                  th PAY
+                -}else
+                  th FINE PAID
             tbody
               each rows in message
                 tr
                   td #{rows.card_id} 
                   td #{rows.sum} 
-                  td #{rows.to_pay}
-                  td
-                    -if (rows.to_pay != 0){
-                      input(type = 'hidden', name = 'radio_flag' value=1)
+                  -if (history_flag != '1'){
+                    td #{rows.to_pay}
+                    td
                       input(type="radio", name="mycardid", value=rows.card_id)
-                    -}
-
-          input(type = 'submit' value='Pay' )
+                  -}
+          -if (history_flag != '1')
+            input(type = 'submit' value='Pay')
       -}       
-  -}
+  
