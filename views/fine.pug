@@ -1,0 +1,53 @@
+html  
+  head
+    title= title
+    script( src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
+    link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/flatly/bootstrap.min.css", rel="stylesheet")
+    script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
+
+
+  body  
+  nav(class='navbar navbar-inverse' style='background-color: rgba(4, 4, 5, 1)')
+      div(class='container-fluid')
+        ul(class='nav navbar-nav')
+          li <a href='/'>Home</a>
+          li <a href='/checkin'>Checkin</a>
+          li <a href='/user'>User</a>
+          li(class='active') <a href='/fine'>Fine</a>
+
+  h1=txn_msg
+  div
+    form(method = 'GET' action='/fine')
+      input(type = 'submit' value='Refresh')
+      input(type = 'hidden' name = 'refresh_flag' value=1)
+
+  div
+    -if(message !== undefined){
+      -if(message == '')
+        h1="No fine data"
+      -else{
+        form(method = 'GET' action='/fine')
+          input(type = 'hidden', name = 'submit_flag' value=1)
+          input(type = 'submit' value='Pay' )
+          table.table(class='table-bordered')
+            thead
+              tr
+                th CARD_ID
+                th TOTAL FINE
+                th PAYABLE FINE
+                th PAY
+            tbody
+              each rows in message
+                tr
+                  td #{rows.card_id} 
+                  td #{rows.sum} 
+                  td #{rows.to_pay}
+                  td
+                    -if (rows.to_pay != 0){
+                      input(type = 'hidden', name = 'radio_flag' value=1)
+                      input(type="radio", name="mycardid", value=rows.card_id)
+                    -}
+
+          input(type = 'submit' value='Pay' )
+      -}       
+  -}
