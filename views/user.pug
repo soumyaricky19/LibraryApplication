@@ -6,7 +6,7 @@ html
     script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
 
   body
-  nav(class='navbar navbar-inverse' style='background-color: rgba(4, 4, 5, 1)')
+  nav(class='navbar navbar-inverse' style='background-color: rgba(0, 0, 0, 1)')
       div(class='container-fluid')
         ul(class='nav navbar-nav')
           li <a href='/'>Home</a>
@@ -21,25 +21,25 @@ html
             tbody
                 tr
                     td: label SSN 
-                    td: input(type='text' name='myssn' maxlength=9 required=true)
+                    td: input(type='text' name='myssn' maxlength=9 required=true value=(message!== undefined) ? message.ussn: '')
                 tr    
                     td: label First Name
-                    td: input(type = 'text', name = 'myfname', maxlength=250 required=true)
+                    td: input(type = 'text', name = 'myfname', maxlength=250 required=true value=(message!== undefined) ? message.ufname: '')
                 tr
                     td: label Last Name
-                    td: input(type = 'text', name = 'mylname', maxlength=250 required=true)
+                    td: input(type = 'text', name = 'mylname', maxlength=250 required=true value=(message!== undefined) ? message.ulname: '')
                 tr
                     td: label  Address
-                    td: input(type = 'text', name = 'myaddress' maxlength=250 required=true)
+                    td: input(type = 'text', name = 'myaddress' maxlength=250 required=true value=(message!== undefined) ? message.uaddress: '')
                 tr
                     td: label  City
-                    td: input(type = 'text', name = 'mycity' maxlength=250 required=true)
+                    td: input(type = 'text', name = 'mycity' maxlength=250 required=true value=(message!== undefined) ? message.ucity: '')
                 tr
                     td: label  State
-                    td: input(type = 'text', name = 'mystate' maxlength=250 required=true)
+                    td: input(type = 'text', name = 'mystate' maxlength=250 required=true value=(message!== undefined) ? message.ustate: '')
                 tr
                     td: label  Phone
-                    td: input(type = 'text', name = 'myphone' maxlength=12 required=true)
+                    td: input(type = 'text', name = 'myphone' maxlength=12 required=true value=(message!== undefined) ? message.uphone: '')
                 tr
                     td: input(type = 'hidden', name = 'submit_flag' value=1)
     div

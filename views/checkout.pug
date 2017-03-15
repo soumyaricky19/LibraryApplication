@@ -6,10 +6,10 @@ html
     script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
 
   body
-  nav(class='navbar navbar-inverse' style='background-color: rgba(4, 4, 5, 1)')
+  nav(class='navbar navbar-inverse' style='background-color: rgba(0, 0, 0, 1)')
       div(class='container-fluid')
         ul(class='nav navbar-nav')
-          li(class='active') <a href='/'>Home</a>
+          li <a href='/'>Home</a>
           li <a href='/checkin'>Checkin</a>
           li <a href='/user'>User</a>
           li <a href='/fine'>Fine</a>
@@ -17,9 +17,12 @@ html
   div
   -if(message != undefined){
       h4="Book details:-"
-        h3=message[0].isbn
-        h4=message[0].title
-        h4=message[0].name
+        h3="ISBN: "+message[0].isbn
+        img(src = message[0].cover)
+        h4="TITLE: "+message[0].title
+        h4="NAME: "+message[0].name 
+        h4="PUBLISHER: "+message[0].publisher
+        h4="PAGES: "+message[0].pages
         
       -if(message[0].available <= 0)
           h5="Note: The book is not available for checkout"    

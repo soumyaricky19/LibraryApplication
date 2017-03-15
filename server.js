@@ -66,7 +66,7 @@ router.get("/",function(req,res){
       } 
       
 
-      for(var l=tokens.length; l>tokens.length/2 ; l--)
+      for(var l=tokens.length; l>=tokens.length/2 ; l--)
       { 
         // console.log(l)
         for (var i=0 ; i<tokens.length-l+1 ; i++)
@@ -107,11 +107,11 @@ router.get("/checkout",function(req,res){
   var isbn= req.query.myisbn
   var temp_rows
   // console.log("Submit flag: "+req.query.submit_flag)
-  var query2="select b.isbn, b.title, GROUP_CONCAT(a.name SEPARATOR ' , ') as name, b.available from book b ,authors a, book_authors ba where  b.isbn = ba.isbn and a.author_id = ba.author_id and b.isbn=? group by b.isbn, b.title";
+  var query2="select b.isbn, b.title, GROUP_CONCAT(a.name SEPARATOR ' , ') as name, b.available, b.cover, b.publisher, b.pages from book b ,authors a, book_authors ba where  b.isbn = ba.isbn and a.author_id = ba.author_id and b.isbn=? group by b.isbn, b.title";
   
   if(req.query.submit_flag != '1')
   {
-    console.log("First time")
+    // console.log("First time")
     con.query(query2,[isbn],function(err,rows)
     {
       if(err)
@@ -373,6 +373,16 @@ router.get("/user",function(req,res){
     var mycity=req.query.mycity
     var mystate=req.query.mystate
     var myphone=req.query.myphone
+    var msg={
+      ussn: myssn,
+      ufname: myfname,
+      ulname: mylname,
+      uaddress: myaddress,
+      ucity: mycity,
+      ustate: mystate,
+      uphone: myphone
+    };
+
     query1='select count(*) as count from borrower where ssn=?'
     con.query(query1,[myssn],function(err,rows)
     {
@@ -380,7 +390,7 @@ router.get("/user",function(req,res){
       {
         txn_message="User already exists!!"
         console.log(txn_message)
-        res.render('user', { title: 'Library application', txn_msg: txn_message})
+        res.render('user', { title: 'Library application',message:msg, txn_msg: txn_message})
       }
       else
       {
@@ -424,7 +434,7 @@ router.get("/fine",function(req,res){
   }
   else if(req.query.refresh_flag == undefined && req.query.submit_flag == undefined && req.query.paid_flag == '1')
   {
-    var query1="select b.card_id ,cast(sum(f.fine_amt) as char) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=1"
+    var query1="select b.card_id ,cast(sum(f.fine_amt) as char) as sum from book_loans b,fines f where b.loan_id=f.loan_id and f.paid=1 group by b.card_id"
     con.query(query1,function(err,rows){
       console.log(rows)
       res.render('fine', { title: 'Library application', message: rows, history_flag: '1'})
@@ -441,7 +451,7 @@ router.get("/fine",function(req,res){
       }
       else
       {
-        var query2="insert into fines select b.loan_id,datediff(ifnull(b.date_in, date(now())),b.due_date) * 0.25,0 from book_loans b where b.due_date < date(now()) and b.loan_id not in(select loan_id from fines)"
+        var query2="insert into fines select b.loan_id,datediff(ifnull(b.date_in, date(now())),b.due_date) * 0.25,0 from book_loans b where b.due_date < date(now()) and datediff(ifnull(b.date_in, date(now())),b.due_date) > 0 and b.loan_id not in(select loan_id from fines)"
         con.query(query2,function(err,rows){
           if(err)
           {
@@ -486,7 +496,7 @@ router.get("/fine",function(req,res){
           }
           else
           {
-            var query2="insert into fines select b.loan_id,datediff(ifnull(b.date_in, date(now())),b.due_date) * 0.25,0 from book_loans b where b.due_date < date(now()) and b.loan_id not in(select loan_id from fines)"
+            var query2="insert into fines select b.loan_id,datediff(ifnull(b.date_in, date(now())),b.due_date) * 0.25,0 from book_loans b where b.due_date < date(now()) and datediff(ifnull(b.date_in, date(now())),b.due_date) > 0 and b.loan_id not in(select loan_id from fines)"
             con.query(query2,function(err,rows)
             {
               if(err)
